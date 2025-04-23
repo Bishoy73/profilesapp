@@ -1,33 +1,46 @@
 import { useState, useEffect } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
 import './App.css';
 
 function App() {
   const [count, setCount] = useState(0);
-  const [message, setMessage] = useState(''); // To store the message from the backend
+  const [message, setMessage] = useState('');
 
-  // Fetch data from backend on component mount
   useEffect(() => {
-    // Replace this URL with your EC2 public IP (backend)
+    // Update the URL to your EC2 public IP
     fetch('http://51.21.223.106:3000/api/hello')
       .then((res) => res.json())
-      .then((data) => setMessage(data.message)) // Assuming the response has a 'message' key
+      .then((data) => setMessage(data.message))
       .catch((error) => console.error('Error:', error));
-  }, []); // This runs once when the component mounts
+  }, []);
 
   return (
-    <div>
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
-        <p>Edit <code>src/App.jsx</code> and save to test HMR</p>
+        <p>
+          Edit <code>src/App.jsx</code> and save to test HMR
+        </p>
       </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
 
-      {/* Display message fetched from backend */}
+      {/* Display the message from the backend */}
       {message && <p>{message}</p>}
-    </div>
+    </>
   );
 }
 
