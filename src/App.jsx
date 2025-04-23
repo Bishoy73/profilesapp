@@ -1,36 +1,39 @@
-import { useState, useEffect } from 'react';
-import './App.css';
+import { useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
 
-   useEffect(() => {
-    console.log('Fetching from EC2...');
-    fetch('http://51.21.219.245:3000/api/hello')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then(data => {
-        console.log('Data:', data);
-        setMessage(data.message);
-      })
-      .catch(error => {
-        console.error('Error fetching:', error.message);
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://your-ec2-ip:3000/upload', {
+        method: 'POST',
+        body: formData,
       });
-  }, []);
+      const data = await response.json();
+      setMessage(data.message);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
 
   return (
-    <>
-      <h1>Test Connection</h1>
-      <p>Count: {count}</p>
-      <button onClick={() => setCount(c => c + 1)}>Add</button>
-      <p>Message from EC2:</p>
-      <strong>{message || 'No message yet'}</strong>
-    </>
+    <div>
+      <h1>Upload File to S3</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="file" onChange={handleFileChange} />
+        <button type="submit">Upload</button>
+      </form>
+      {message && <p>{message}</p>}
+    </div>
   );
 }
 
