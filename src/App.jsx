@@ -8,17 +8,11 @@ function App() {
   const [message, setMessage] = useState(''); // To store the message from the backend
 
   useEffect(() => {
-    console.log("📡 Fetching from backend...");
-
-    fetch('http://51.21.219.245:3000/api/hello')
+    // We now fetch using relative path to work with Vite proxy
+    fetch('/api/hello')
       .then((res) => res.json())
-      .then((data) => {
-        console.log("✅ Backend response:", data);
-        setMessage(data.message);
-      })
-      .catch((error) => {
-        console.error('❌ Error fetching from backend:', error);
-      });
+      .then((data) => setMessage(data.message)) // Assuming the response has a 'message' key
+      .catch((error) => console.error('Error:', error));
   }, []); // This will run once when the component mounts
 
   return (
@@ -33,7 +27,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 9)}>
+        <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
         <p>
@@ -45,10 +39,9 @@ function App() {
       </p>
 
       {/* Display the message from the backend */}
-      <p>Backend message: {message || '...waiting for backend'}</p>
+      {message && <p>{message}</p>}
     </>
   );
 }
 
 export default App;
-
