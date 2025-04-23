@@ -5,16 +5,21 @@ function App() {
   const [count, setCount] = useState(0);
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
+   useEffect(() => {
     console.log('Fetching from EC2...');
     fetch('http://51.21.219.245:3000/api/hello')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(data => {
         console.log('Data:', data);
         setMessage(data.message);
       })
       .catch(error => {
-        console.error('Error fetching:', error);
+        console.error('Error fetching:', error.message);
       });
   }, []);
 
