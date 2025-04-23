@@ -8,7 +8,7 @@ function App() {
   const [message, setMessage] = useState(''); // To store the message from the backend
 
   useEffect(() => {
-    // We now fetch using relative path to work with Vite proxy
+    // Fetching from the API endpoint exposed by Vite proxy
     fetch('/api/hello')
       .then((res) => res.json())
       .then((data) => setMessage(data.message)) // Assuming the response has a 'message' key
