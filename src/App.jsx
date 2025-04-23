@@ -11,7 +11,7 @@ function App() {
     // Replace with your EC2 public IP
    // fetch('http://<your-ec2-public-ip>:3000/api/hello')
      
-    fetch('http://51.21.219.245:3000/api/hello')
+    fetch('https://51.21.219.245:3000/api/hello')
       .then((res) => res.json())
       .then((data) => setMessage(data.message)) // Assuming the response has a 'message' key
       .catch((error) => console.error('Error:', error));
