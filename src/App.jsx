@@ -6,14 +6,16 @@ import './App.css';
 function App() {
   const [count, setCount] = useState(0);
   const [message, setMessage] = useState(''); // To store the message from the backend
-
-  useEffect(() => {
-    // Fetching from the API endpoint exposed by Vite proxy
-    fetch('/api/hello')
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message)) // Assuming the response has a 'message' key
-      .catch((error) => console.error('Error:', error));
-  }, []); // This will run once when the component mounts
+useEffect(() => {
+  console.log("Trying to fetch");
+  fetch('http://51.21.219.245:3000/api/hello')
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Data from backend:", data);
+      setMessage(data.message);
+    })
+    .catch((error) => console.error('Fetch error:', error));
+}, []);
 
   return (
     <>
