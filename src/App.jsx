@@ -1,5 +1,5 @@
 import React from "react";
-import FileManagerApp from "./FileManagerApp"; // adjust path if needed
+import FileManagerApp from "./FileManagerApp";
 import "./App.css";
 
 function App() {
