@@ -1,47 +1,45 @@
-import { useState, useEffect } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [message, setMessage] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [downloadUrl, setDownloadUrl] = useState('');
 
-  useEffect(() => {
-    // Update the URL to your EC2 public IP
-    //fetch('http://56.228.19.62:3000/api/hello')
-    fetch('https://cors-anywhere.herokuapp.com/http://56.228.19.62:3000/api/hello')
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message))
-      .catch((error) => console.error('Error:', error));
-  }, []);
+  const handleFileUpload = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleDownload = () => {
+    if (!downloadUrl) return alert('Please enter a download URL');
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = '';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div className="container">
+      <h1 className="title">React File Portal</h1>
 
-      {/* Display the message from the backend */}
-      {message && <p>{message}</p>}
-    </>
+      <div className="card">
+        <h2>📤 Upload File</h2>
+        <input type="file" onChange={handleFileUpload} />
+        {selectedFile && <p>Selected: {selectedFile.name}</p>}
+      </div>
+
+      <div className="card">
+        <h2>📥 Download File</h2>
+        <input
+          type="text"
+          placeholder="Enter file URL..."
+          value={downloadUrl}
+          onChange={(e) => setDownloadUrl(e.target.value)}
+        />
+        <button onClick={handleDownload}>Download</button>
+      </div>
+    </div>
   );
 }
 
