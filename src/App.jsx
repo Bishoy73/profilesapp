@@ -9,7 +9,8 @@ function App() {
 
   useEffect(() => {
     // Update the URL to your EC2 public IP
-    fetch('http://56.228.19.62:3000/api/hello')
+    //fetch('http://56.228.19.62:3000/api/hello')
+    fetch('https://cors-anywhere.herokuapp.com/http://56.228.19.62:3000/api/hello')
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((error) => console.error('Error:', error));
