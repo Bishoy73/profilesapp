@@ -1,46 +1,92 @@
-import { useState } from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
-function App() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [downloadUrl, setDownloadUrl] = useState('');
+function FileUploader() {
+  const [files, setFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState('');
+  const [uploadedFile, setUploadedFile] = useState(null);
 
-  const handleFileUpload = (e) => {
-    setSelectedFile(e.target.files[0]);
+  // جلب الملفات من الـ S3
+  useEffect(() => {
+    fetch('http://51.20.136.139:3000/api/file-names')  // تأكد من استخدام الـ endpoint الصحيح
+      .then(response => response.json())
+      .then(data => {
+        setFiles(data);
+      })
+      .catch(error => {
+        console.error('Error fetching files:', error);
+      });
+  }, []);
+
+  // التعامل مع رفع الملف
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      alert('Please select a file to upload');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://51.20.136.139:3000/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('File uploaded successfully!');
+        setUploadedFile(file.name);
+      } else {
+        alert('Failed to upload file');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file');
+    }
   };
 
-  const handleDownload = () => {
-    if (!downloadUrl) return alert('Please enter a download URL');
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = '';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // التعامل مع اختيار الملف من قائمة S3
+  const handleFileSelect = (e) => {
+    setSelectedFile(e.target.value);
   };
 
   return (
-    <div className="container">
-      <h1 className="title">React File Portal</h1>
+    <div>
+      <h1>Upload and Select Files</h1>
 
-      <div className="card">
-        <h2>📤 Upload File</h2>
-        <input type="file" onChange={handleFileUpload} />
-        {selectedFile && <p>Selected: {selectedFile.name}</p>}
-      </div>
+      {/* حقل تحميل الملفات من الكمبيوتر */}
+      <input type="file" onChange={handleFileUpload} />
+      <br />
 
-      <div className="card">
-        <h2>📥 Download File</h2>
-        <input
-          type="text"
-          placeholder="Enter file URL..."
-          value={downloadUrl}
-          onChange={(e) => setDownloadUrl(e.target.value)}
-        />
-        <button onClick={handleDownload}>Download</button>
-      </div>
+      {/* حقل اختيار الملفات من S3 */}
+      <select onChange={handleFileSelect}>
+        <option value="">Select a file from S3</option>
+        {files.map((file, index) => (
+          <option key={index} value={file}>
+            {file}
+          </option>
+        ))}
+      </select>
+
+      {/* عرض الملف الذي تم اختياره */}
+      {selectedFile && (
+        <div>
+          <p>Selected File: {selectedFile}</p>
+          <a href={`https://files--pool.s3.amazonaws.com/${selectedFile}`} target="_blank" rel="noopener noreferrer">
+            Open File
+          </a>
+        </div>
+      )}
+
+      {/* عرض الملف الذي تم رفعه */}
+      {uploadedFile && (
+        <div>
+          <p>Uploaded File: {uploadedFile}</p>
+        </div>
+      )}
     </div>
   );
 }
 
-export default App;
+export default FileUploader;
