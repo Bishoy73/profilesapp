@@ -7,7 +7,7 @@ function FileUploader() {
 
   // جلب الملفات من الـ S3
   useEffect(() => {
-    fetch('https://8ac8-13-48-133-223.ngrok-free.app/api/file-names')  
+    fetch('https://f1a4-13-48-133-223.ngrok-free.app/api/file-names')  
       .then(response => response.json())
       .then(data => {
         setFiles(data);
@@ -29,7 +29,7 @@ function FileUploader() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('https://8ac8-13-48-133-223.ngrok-free.app/api/upload', {
+      const response = await fetch('https://f1a4-13-48-133-223.ngrok-free.app/api/upload', {
         method: 'POST',
         body: formData,
       });
