@@ -7,7 +7,7 @@ function FileUploader() {
 
   // جلب الملفات من الـ S3
   useEffect(() => {
-    fetch('https://f1a4-13-48-133-223.ngrok-free.app/api/file-names')  
+    fetch('https://mq70d704tl.execute-api.eu-north-1.amazonaws.com/prod/api/file-names')  // تحديث الرابط هنا
       .then(response => response.json())
       .then(data => {
         setFiles(data);
@@ -29,7 +29,7 @@ function FileUploader() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('https://f1a4-13-48-133-223.ngrok-free.app/api/upload', {
+      const response = await fetch('https://mq70d704tl.execute-api.eu-north-1.amazonaws.com/prod/api/upload', { // تحديث الرابط هنا
         method: 'POST',
         body: formData,
       });
@@ -90,3 +90,4 @@ function FileUploader() {
 }
 
 export default FileUploader;
+
